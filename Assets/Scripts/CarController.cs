@@ -57,7 +57,7 @@ public class CarController : MonoBehaviour
     {
         GetInputs();
         AnimateWheels();
-        WheelEffects();
+        // WheelEffects();
     }
 
     void LateUpdate()
@@ -142,21 +142,21 @@ public class CarController : MonoBehaviour
         }
     }
 
-    void WheelEffects()
-    {
-        foreach (var wheel in wheels)
-        {
-            //var dirtParticleMainSettings = wheel.smokeParticle.main;
+    // void WheelEffects()
+    // {
+    //     foreach (var wheel in wheels)
+    //     {
+    //         //var dirtParticleMainSettings = wheel.smokeParticle.main;
 
-            if (Input.GetKey(KeyCode.Space) && wheel.axel == Axel.Rear && wheel.wheelCollider.isGrounded == true && carRb.velocity.magnitude >= 10.0f)
-            {
-                wheel.wheelEffectObj.GetComponentInChildren<TrailRenderer>().emitting = true;
-                wheel.smokeParticle.Emit(1);
-            }
-            else
-            {
-                wheel.wheelEffectObj.GetComponentInChildren<TrailRenderer>().emitting = false;
-            }
-        }
-    }
+    //         if (Input.GetKey(KeyCode.Space) && wheel.axel == Axel.Rear && wheel.wheelCollider.isGrounded == true && carRb.velocity.magnitude >= 10.0f)
+    //         {
+    //             wheel.wheelEffectObj.GetComponentInChildren<TrailRenderer>().emitting = true;
+    //             wheel.smokeParticle.Emit(1);
+    //         }
+    //         else
+    //         {
+    //             wheel.wheelEffectObj.GetComponentInChildren<TrailRenderer>().emitting = false;
+    //         }
+    //     }
+    // }
 }
