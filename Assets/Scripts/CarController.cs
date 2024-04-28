@@ -1,13 +1,14 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 public class CarController : MonoBehaviour
 {
     public enum ControlMode
     {
         Keyboard,
-        Buttons
+        SteeringWheel
     };
 
     public enum Axel
@@ -26,6 +27,8 @@ public class CarController : MonoBehaviour
         public Axel axel;
     }
 
+    LogitechGSDK.LogiControllerPropertiesData properties;
+
     public ControlMode control;
 
     public float maxAcceleration = 30.0f;
@@ -38,10 +41,14 @@ public class CarController : MonoBehaviour
 
     public List<Wheel> wheels;
 
-    float moveInput;
+    float throttleInput;
     float steerInput;
+    float breakInput;
+    float moveInput;
 
     private Rigidbody carRb;
+
+    private float MAX_VALUE_LOGITECH = 32767.0f; 
 
     // private CarLights carLights;
 
@@ -49,8 +56,14 @@ public class CarController : MonoBehaviour
     {
         carRb = GetComponent<Rigidbody>();
         carRb.centerOfMass = _centerOfMass;
+        Debug.Log("SteeringInit:" + LogitechGSDK.LogiSteeringInitialize(false));
 
         // carLights = GetComponent<CarLights>();
+    }
+
+    void OnApplicationQuit()
+    {
+        Debug.Log("SteeringShutdown:" + LogitechGSDK.LogiSteeringShutdown());
     }
 
     void Update()
@@ -67,22 +80,45 @@ public class CarController : MonoBehaviour
         Brake();
     }
 
-    public void MoveInput(float input)
-    {
-        moveInput = input;
-    }
-
-    public void SteerInput(float input)
-    {
-        steerInput = input;
-    }
 
     void GetInputs()
     {
-        if(control == ControlMode.Keyboard)
-        {
-            moveInput = Input.GetAxis("Vertical");
+        
+        //All the test functions are called on the first device plugged in(index = 0)
+        if (LogitechGSDK.LogiUpdate() && LogitechGSDK.LogiIsConnected(0) && control == ControlMode.SteeringWheel){
+
+            //CONTROLLER STATE
+            LogitechGSDK.DIJOYSTATE2ENGINES rec;
+            rec = LogitechGSDK.LogiGetStateUnity(0);
+
+            // normalizamos valores en el rango [-1, 1]
+            throttleInput = (rec.lY * -1) / MAX_VALUE_LOGITECH ; // acelerador
+            breakInput = (rec.lRz * -1) / MAX_VALUE_LOGITECH; // freno
+            steerInput = rec.lX / MAX_VALUE_LOGITECH; // volante
+            
+            // si los pedales de aceleración y freno no estan pulsados
+            if(throttleInput < 0) throttleInput = 0;
+            if(breakInput < 0) breakInput= 0;
+
+            // calculamos el movimiento del coche por los pedales del acelerador y del freno
+            moveInput = throttleInput - breakInput;
+
+            Debug.Log("steerInput -> "  + steerInput);
+            Debug.Log("throtteInput -> "  + throttleInput);
+            Debug.Log("breakInput -> "  + breakInput);
+            Debug.Log("moveInput -> "  + moveInput);
+        }
+        else if(control == ControlMode.Keyboard){
+
+            if (Input.GetKey(KeyCode.W)) throttleInput = maxAcceleration * Time.deltaTime; else throttleInput = 0;
+            if (Input.GetKey(KeyCode.S)) breakInput = brakeAcceleration * Time.deltaTime; else breakInput = 0;
             steerInput = Input.GetAxis("Horizontal");
+
+            // calculamos el movimiento del coche por las teclas del acelerador y del freno
+            moveInput = throttleInput - breakInput;
+
+            Debug.Log("steerInput -> "  + steerInput);
+            Debug.Log("moveInput -> "  + moveInput);
         }
     }
 
@@ -90,7 +126,7 @@ public class CarController : MonoBehaviour
     {
         foreach(var wheel in wheels)
         {
-            wheel.wheelCollider.motorTorque = moveInput * 600 * maxAcceleration * Time.deltaTime;
+            wheel.wheelCollider.motorTorque = moveInput * 600 * maxAcceleration;
         }
     }
 
@@ -112,7 +148,7 @@ public class CarController : MonoBehaviour
         {
             foreach (var wheel in wheels)
             {
-                wheel.wheelCollider.brakeTorque = 300 * brakeAcceleration * Time.deltaTime;
+                wheel.wheelCollider.brakeTorque = 300 * brakeAcceleration;
             }
 
             // carLights.isBackLightOn = true;

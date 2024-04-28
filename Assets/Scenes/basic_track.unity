@@ -213,6 +213,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3374474453900846415, guid: e9be6b9d71ce20345b55b654f6eca5d9, type: 3}
+      propertyPath: m_Mass
+      value: 1300
+      objectReference: {fileID: 0}
     - target: {fileID: 6948587442945639655, guid: e9be6b9d71ce20345b55b654f6eca5d9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -342,6 +346,7 @@ GameObject:
   - component: {fileID: 642430558}
   - component: {fileID: 642430557}
   - component: {fileID: 642430556}
+  - component: {fileID: 642430560}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -436,6 +441,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &642430560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642430555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3bc11ac36a3d9e44a89de8483f7a437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &687351629
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,7 +617,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33bbba6bc07665640b844e1b81d2e458, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 52.49
+      value: 52.54
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33bbba6bc07665640b844e1b81d2e458, type: 3}
       propertyPath: m_LocalRotation.w
@@ -662,7 +679,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bbd9233d969d6fc41986006524ad3103, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 75.009995
+      value: 74.97
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bbd9233d969d6fc41986006524ad3103, type: 3}
       propertyPath: m_LocalRotation.w
@@ -788,7 +805,7 @@ Transform:
   m_GameObject: {fileID: 1280209742}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: -7}
+  m_LocalPosition: {x: 0, y: 2, z: -9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -807,7 +824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectToFollow: {fileID: 1703684389}
-  offset: {x: 0, y: 2.5, z: -7}
+  offset: {x: 0, y: 1.7, z: -3.5}
   followSpeed: 10
   lookSpeed: 10
 --- !u!1 &1282115060 stripped
@@ -976,9 +993,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e2dcafeff0a85f00bada761ab6b6b16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  control: 0
-  maxAcceleration: 1000
-  brakeAcceleration: 1000
+  control: 1
+  maxAcceleration: 10
+  brakeAcceleration: 30
   turnSensitivity: 1
   maxSteerAngle: 60
   _centerOfMass: {x: 0, y: 0, z: 0}
@@ -1023,7 +1040,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: bbd9233d969d6fc41986006524ad3103, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.01
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bbd9233d969d6fc41986006524ad3103, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1031,7 +1048,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bbd9233d969d6fc41986006524ad3103, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -14.950001
+      value: -14.97
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bbd9233d969d6fc41986006524ad3103, type: 3}
       propertyPath: m_LocalRotation.w
