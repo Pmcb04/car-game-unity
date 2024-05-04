@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine.InputSystem;
 
 public class CarController : MonoBehaviour
 {
@@ -68,7 +69,7 @@ public class CarController : MonoBehaviour
 
     void Update()
     {
-        GetInputs();
+        // GetInputs();
         AnimateWheels();
         // WheelEffects();
     }
@@ -124,10 +125,61 @@ public class CarController : MonoBehaviour
 
     void Move()
     {
+        moveInput = throttleInput - breakInput;
         foreach(var wheel in wheels)
         {
             wheel.wheelCollider.motorTorque = moveInput * 600 * maxAcceleration;
         }
+    }
+
+    public void accelerate(InputAction.CallbackContext context)
+    {
+        if(context.performed){
+            Debug.Log("accelerate " + context.phase);
+            throttleInput += maxAcceleration * Time.deltaTime;
+        }
+        else if(context.canceled){
+            throttleInput = 0;
+        }
+       
+        Move();
+    }
+
+    public void brake(InputAction.CallbackContext context)
+    {
+        if(context.performed){
+            Debug.Log("brake " + context.phase);
+            breakInput += brakeAcceleration * Time.deltaTime;
+        }else if(context.canceled){
+            breakInput = 0;
+        }
+        Move();
+    }
+
+    public void right(InputAction.CallbackContext context)
+    {
+        if(context.performed){
+            Debug.Log("RIGHT " + context.phase);
+            steerInput = 1;
+        }
+        else if(context.canceled){
+            steerInput = 0;
+        }
+        Move();
+        Steer();
+    }
+
+    public void left(InputAction.CallbackContext context)
+    {
+        if(context.performed){
+            Debug.Log("LEFT " + context.phase);
+            steerInput = -1;
+        }
+        else if(context.canceled){
+            steerInput = 0;
+        }
+        Move();
+        Steer();
     }
 
     void Steer()
