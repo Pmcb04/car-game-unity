@@ -62,6 +62,15 @@ public partial class @Cargameunity: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""lights"",
+                    ""type"": ""Button"",
+                    ""id"": ""e15d152d-c3ee-4a54-b841-2ed812b09fd8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -216,6 +225,28 @@ public partial class @Cargameunity: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Right"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8281e74f-4f67-4d74-a435-d8dd30038fd9"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""lights"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3910d766-1bac-4200-a8c5-f37abe2837c8"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""lights"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -807,6 +838,7 @@ public partial class @Cargameunity: IInputActionCollection2, IDisposable
         m_Player_Brake = m_Player.FindAction("Brake", throwIfNotFound: true);
         m_Player_Right = m_Player.FindAction("Right", throwIfNotFound: true);
         m_Player_Left = m_Player.FindAction("Left", throwIfNotFound: true);
+        m_Player_lights = m_Player.FindAction("lights", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -884,6 +916,7 @@ public partial class @Cargameunity: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Brake;
     private readonly InputAction m_Player_Right;
     private readonly InputAction m_Player_Left;
+    private readonly InputAction m_Player_lights;
     public struct PlayerActions
     {
         private @Cargameunity m_Wrapper;
@@ -892,6 +925,7 @@ public partial class @Cargameunity: IInputActionCollection2, IDisposable
         public InputAction @Brake => m_Wrapper.m_Player_Brake;
         public InputAction @Right => m_Wrapper.m_Player_Right;
         public InputAction @Left => m_Wrapper.m_Player_Left;
+        public InputAction @lights => m_Wrapper.m_Player_lights;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -913,6 +947,9 @@ public partial class @Cargameunity: IInputActionCollection2, IDisposable
             @Left.started += instance.OnLeft;
             @Left.performed += instance.OnLeft;
             @Left.canceled += instance.OnLeft;
+            @lights.started += instance.OnLights;
+            @lights.performed += instance.OnLights;
+            @lights.canceled += instance.OnLights;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -929,6 +966,9 @@ public partial class @Cargameunity: IInputActionCollection2, IDisposable
             @Left.started -= instance.OnLeft;
             @Left.performed -= instance.OnLeft;
             @Left.canceled -= instance.OnLeft;
+            @lights.started -= instance.OnLights;
+            @lights.performed -= instance.OnLights;
+            @lights.canceled -= instance.OnLights;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1115,6 +1155,7 @@ public partial class @Cargameunity: IInputActionCollection2, IDisposable
         void OnBrake(InputAction.CallbackContext context);
         void OnRight(InputAction.CallbackContext context);
         void OnLeft(InputAction.CallbackContext context);
+        void OnLights(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

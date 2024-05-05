@@ -24,9 +24,9 @@ public class CarController : MonoBehaviour
         public GameObject wheelModel;
         public WheelCollider wheelCollider;
         public GameObject wheelEffectObj;
-        public ParticleSystem smokeParticle;
         public Axel axel;
     }
+    
 
     LogitechGSDK.LogiControllerPropertiesData properties;
 
@@ -51,15 +51,19 @@ public class CarController : MonoBehaviour
 
     private float MAX_VALUE_LOGITECH = 32767.0f; 
 
-    // private CarLights carLights;
+    public GameObject frontLights;
+    public GameObject backLights;
+
+    private bool lightsOn;
 
     void Start()
     {
         carRb = GetComponent<Rigidbody>();
         carRb.centerOfMass = _centerOfMass;
         Debug.Log("SteeringInit:" + LogitechGSDK.LogiSteeringInitialize(false));
-
-        // carLights = GetComponent<CarLights>();
+        lightsOn = false;
+        frontLights.SetActive(lightsOn);
+        backLights.SetActive(lightsOn);
     }
 
     void OnApplicationQuit()
@@ -71,7 +75,7 @@ public class CarController : MonoBehaviour
     {
         // GetInputs();
         AnimateWheels();
-        // WheelEffects();
+        WheelEffects();
     }
 
     void LateUpdate()
@@ -135,7 +139,7 @@ public class CarController : MonoBehaviour
     public void accelerate(InputAction.CallbackContext context)
     {
         if(context.performed){
-            Debug.Log("accelerate " + context.phase);
+            // Debug.Log("accelerate " + context.phase);
             throttleInput += maxAcceleration * Time.deltaTime;
         }
         else if(context.canceled){
@@ -148,10 +152,12 @@ public class CarController : MonoBehaviour
     public void brake(InputAction.CallbackContext context)
     {
         if(context.performed){
-            Debug.Log("brake " + context.phase);
+            // Debug.Log("brake " + context.phase);
+            if(lightsOn) backLights.SetActive(true);
             breakInput += brakeAcceleration * Time.deltaTime;
         }else if(context.canceled){
             breakInput = 0;
+            if(lightsOn) backLights.SetActive(false);
         }
         Move();
     }
@@ -159,27 +165,40 @@ public class CarController : MonoBehaviour
     public void right(InputAction.CallbackContext context)
     {
         if(context.performed){
-            Debug.Log("RIGHT " + context.phase);
+            // Debug.Log("RIGHT " + context.phase);
             steerInput = 1;
         }
         else if(context.canceled){
             steerInput = 0;
         }
-        Move();
         Steer();
+        Move();
     }
 
     public void left(InputAction.CallbackContext context)
     {
         if(context.performed){
-            Debug.Log("LEFT " + context.phase);
+            // Debug.Log("LEFT " + context.phase);
             steerInput = -1;
         }
         else if(context.canceled){
             steerInput = 0;
         }
-        Move();
         Steer();
+        Move();
+    }
+
+    public void ligths(InputAction.CallbackContext context)
+    {
+        if(context.performed){
+            lightsOn = !lightsOn;
+            frontLights.SetActive(lightsOn);
+        }
+    }
+
+    void OnCollissionEnter(Collision collision)
+    {
+        Debug.Log("OnCollissionEnter");
     }
 
     void Steer()
@@ -202,9 +221,6 @@ public class CarController : MonoBehaviour
             {
                 wheel.wheelCollider.brakeTorque = 300 * brakeAcceleration;
             }
-
-            // carLights.isBackLightOn = true;
-            // carLights.OperateBackLights();
         }
         else
         {
@@ -212,11 +228,10 @@ public class CarController : MonoBehaviour
             {
                 wheel.wheelCollider.brakeTorque = 0;
             }
-
-            // carLights.isBackLightOn = false;
-            // carLights.OperateBackLights();
         }
     }
+
+   
 
     void AnimateWheels()
     {
@@ -230,21 +245,23 @@ public class CarController : MonoBehaviour
         }
     }
 
-    // void WheelEffects()
-    // {
-    //     foreach (var wheel in wheels)
-    //     {
-    //         //var dirtParticleMainSettings = wheel.smokeParticle.main;
 
-    //         if (Input.GetKey(KeyCode.Space) && wheel.axel == Axel.Rear && wheel.wheelCollider.isGrounded == true && carRb.velocity.magnitude >= 10.0f)
-    //         {
-    //             wheel.wheelEffectObj.GetComponentInChildren<TrailRenderer>().emitting = true;
-    //             wheel.smokeParticle.Emit(1);
-    //         }
-    //         else
-    //         {
-    //             wheel.wheelEffectObj.GetComponentInChildren<TrailRenderer>().emitting = false;
-    //         }
-    //     }
-    // }
+
+    void WheelEffects()
+    {
+        foreach (var wheel in wheels)
+        {
+            //var dirtParticleMainSettings = wheel.smokeParticle.main;
+
+            if (wheel.axel == Axel.Rear )
+            {
+                wheel.wheelEffectObj.GetComponentInChildren<TrailRenderer>().emitting = true;
+                // wheel.smokeParticle.Emit(1);
+            }
+            else
+            {
+                wheel.wheelEffectObj.GetComponentInChildren<TrailRenderer>().emitting = false;
+            }
+        }
+    }
 }
