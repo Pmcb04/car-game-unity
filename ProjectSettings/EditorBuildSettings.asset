@@ -12,6 +12,6 @@ EditorBuildSettings:
     path: Assets/Scenes/BasicTrack.unity
     guid: 9d82358c0b533f54698802a301660b99
   - enabled: 1
-    path: Assets/Scenes/AdvancedTrack.unity
-    guid: 4fd7e36aa7324d640993ac7d122efe50
+    path: Assets/Scenes/FinalScene.unity
+    guid: c5f8fa333394d4f4c85dfbc1caff0a68
   m_configObjects: {}

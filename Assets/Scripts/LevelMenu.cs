@@ -20,9 +20,17 @@ public class LevelMenu : MonoBehaviour
         
     }
 
+
+
     public void LoadTrack(string trackName) {
         SceneManager.LoadScene(
             trackName + "Track"
+        );
+    }
+
+    public void LoadMainMenu() {
+        SceneManager.LoadScene(
+            "MainMenu"  
         );
     }
 

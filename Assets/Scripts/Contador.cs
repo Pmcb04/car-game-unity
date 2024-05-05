@@ -6,49 +6,82 @@ using TMPro;
 public class Contador : MonoBehaviour
 {
 
-    private int laps;
+    private int lapsCompleted;
     public int max_laps;
-    private float time;
+    public static float totalTime;
     private bool startTimer;
 
     public GameObject car;
     private Rigidbody carRb;
 
-    public TMP_Text timeText;
+    public TMP_Text totalTimeText;
+    public TMP_Text lapTimeText;
     public TMP_Text lapsText;
     public TMP_Text velocityText;
+    public TMP_Text listTimeLaps;
 
+
+    void OnDisable()
+    {
+        PlayerPrefs.SetFloat("totalTime", totalTime);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        time = 0.0f;
-        laps = 0;
+        totalTime = 0.0f;
+        lapsCompleted = 0;
         if (max_laps == 0) max_laps = 5;
         carRb = car.GetComponent<Rigidbody>();
         startTimer = false;
         velocityText.text = "0km/h";
+        totalTimeText.text = "00:00";
+        lapTimeText.text = "00:00";
+        lapsText.text = "0/" + max_laps;
+        listTimeLaps.text = "";
+        changeLapsText();
+    }
+
+    public void startContador(){
+        startTimer = true;
+    }
+
+    public void stopContador(){
+        startTimer = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        timeText.text = "00:00";
-        time += Time.deltaTime;
-        updateContador();
+        if(startTimer){
+            totalTime += Time.deltaTime;
+        }
+        updateTotalTimeContador();
         updateVelocity();
     }
 
-    void changetimeText()
+    public float getTotalTime()
     {
-        int minutos = (int)time / 60;
-        int segundos = (int)time % 60;
-        timeText.text = minutos.ToString("00") + ":" + segundos.ToString("00");
+        return totalTime;
+    }
+
+    void changeTotalTimeText()
+    {
+        int minutos = (int)totalTime / 60;
+        int segundos = (int)totalTime % 60;
+        totalTimeText.text = minutos.ToString("00") + ":" + segundos.ToString("00");
+    }
+
+    public void changeLapTimeText(float lapTime)
+    {
+        int minutos = (int)lapTime / 60;
+        int segundos = (int)lapTime % 60;
+        lapTimeText.text = minutos.ToString("00") + ":" + segundos.ToString("00");
     }
 
     void changeLapsText()
     {
-        lapsText.text = laps + "/" + max_laps;
+        lapsText.text = lapsCompleted + "/" + max_laps;
     }
 
     void changeVelocityText(float velocity)
@@ -56,11 +89,18 @@ public class Contador : MonoBehaviour
         velocityText.text = velocity.ToString("0") + "km/h";
     }
 
-    void updateContador()
+    public void updateLaps()
     {
-        if (time > 0.0f)
+        lapsCompleted++;
+        Debug.Log("updateLaps" + lapsCompleted);
+        changeLapsText();
+    }
+
+    void updateTotalTimeContador()
+    {
+        if (totalTime > 0.0f)
         {
-            changetimeText();
+            changeTotalTimeText();
         }
     }
 
@@ -73,17 +113,10 @@ public class Contador : MonoBehaviour
         }
     }
 
-
-    public void incrementContador()
-    {          
-        Debug.Log("Incrementando contador ----------------------------------------");  
-        laps++;
-        changeLapsText();
-        timeText.text = "00:00";
-        if (laps == max_laps){
-                lapsText.text = "FINISH";
-        }
-
+    public void addLapTimeToList(float lapNumber, float lapTime)
+    {
+        int minutos = (int)lapTime / 60;
+        int segundos = (int)lapTime % 60;
+        listTimeLaps.text += "Lap " + lapNumber  + "[" +  minutos.ToString("00") + ":" + segundos.ToString("00") + "]" + "\n";
     }
-
 }
