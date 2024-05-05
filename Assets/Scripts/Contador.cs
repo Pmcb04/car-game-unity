@@ -26,12 +26,18 @@ public class Contador : MonoBehaviour
         PlayerPrefs.SetFloat("totalTime", totalTime);
     }
 
+    void OnEnable()
+    {
+        Debug.Log("OnEnable contador get laps " + PlayerPrefs.GetInt("maxLaps"));
+        max_laps =  PlayerPrefs.GetInt("maxLaps", 5);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         totalTime = 0.0f;
         lapsCompleted = 0;
-        if (max_laps == 0) max_laps = 5;
+        if (max_laps == 0) max_laps = 3;
         carRb = car.GetComponent<Rigidbody>();
         startTimer = false;
         velocityText.text = "0km/h";
