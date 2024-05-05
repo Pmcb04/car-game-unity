@@ -11,8 +11,12 @@ public class Contador : MonoBehaviour
     private float time;
     private bool startTimer;
 
+    public GameObject car;
+    private Rigidbody carRb;
+
     public TMP_Text timeText;
     public TMP_Text lapsText;
+    public TMP_Text velocityText;
 
 
     // Start is called before the first frame update
@@ -21,7 +25,9 @@ public class Contador : MonoBehaviour
         time = 0.0f;
         laps = 0;
         if (max_laps == 0) max_laps = 5;
+        carRb = car.GetComponent<Rigidbody>();
         startTimer = false;
+        velocityText.text = "0km/h";
     }
 
     // Update is called once per frame
@@ -30,6 +36,7 @@ public class Contador : MonoBehaviour
         timeText.text = "00:00";
         time += Time.deltaTime;
         updateContador();
+        updateVelocity();
     }
 
     void changetimeText()
@@ -44,6 +51,11 @@ public class Contador : MonoBehaviour
         lapsText.text = laps + "/" + max_laps;
     }
 
+    void changeVelocityText(float velocity)
+    {
+        velocityText.text = velocity.ToString("0") + "km/h";
+    }
+
     void updateContador()
     {
         if (time > 0.0f)
@@ -51,6 +63,16 @@ public class Contador : MonoBehaviour
             changetimeText();
         }
     }
+
+    void updateVelocity()
+    {
+        float velocity = carRb.velocity.magnitude * 3.6f;
+        if (velocity > 0.0f)
+        {
+            changeVelocityText(velocity);
+        }
+    }
+
 
     public void incrementContador()
     {          
